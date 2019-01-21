@@ -50,8 +50,7 @@
         "filp/whoops": "^2.0",
         "codeclimate/php-test-reporter": "^0.3.0",
         "themsaid/laravel-langman": "^1.1",
-        "diablomedia/phpunit-pretty-printer": "dev-master",
-        "friendsofphp/php-cs-fixer": "^1.11"
+        "diablomedia/phpunit-pretty-printer": "dev-master"
     },
     "autoload": {
         "classmap": [
@@ -91,7 +90,7 @@
     "repositories": {
         "packagist": {
             "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
+            "url": "https://packagist.laravel-china.org"
         }
     }
 }
