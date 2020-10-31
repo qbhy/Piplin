@@ -11,12 +11,9 @@
 
 namespace Piplin\Http\Controllers\Dashboard;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Piplin\Bus\Jobs\SetupSkeletonJob;
+use Illuminate\View\View;
 use Piplin\Http\Controllers\Controller;
-use Piplin\Http\Requests\StoreProjectRequest;
 use Piplin\Models\Command;
 use Piplin\Models\DeployPlan;
 use Piplin\Models\Task;
@@ -57,8 +54,8 @@ class DeploymentController extends Controller
             'tab'             => $tab,
             'title'           => trans('tasks.label'),
             'breadcrumb'      => [
-                ['url' => route('projects', ['id' => $project->id]), 'label' => $project->name],
-                ['url' => route('deployments', ['id' => $deployPlan->id]), 'label' => trans('projects.deploy_plan')],
+                ['url' => route('projects', ['project' => $project->id]), 'label' => $project->name],
+                ['url' => route('deployments', ['deployment' => $deployPlan->id]), 'label' => trans('projects.deploy_plan')],
             ],
         ];
 
@@ -91,7 +88,7 @@ class DeploymentController extends Controller
      *
      * @param  DeployPlan $deployPlan
      * @param  int        $paginate
-     * @return array
+     * @return array|\Illuminate\Contracts\Pagination\Paginator
      */
     private function getLatest(DeployPlan $deployPlan, $paginate = 15)
     {

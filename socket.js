@@ -62,7 +62,7 @@ io.use(function(socket, next) {
 
     if (decoded) {
         // everything went fine - save userId as property of given connection instance
-        socket.userId = decoded.data.userId;
+        socket.userId = decoded.data ? decoded.data.userId : 0;
         next();
     } else {
         // invalid token - terminate the connection
