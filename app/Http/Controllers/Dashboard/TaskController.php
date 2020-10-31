@@ -83,7 +83,7 @@ class TaskController extends Controller
         $project = $task->project ?: null;
         if ($project) {
             $data['breadcrumb'] = [
-                ['url' => route('projects', ['task' => $project->id]), 'label' => $project->name],
+                ['url' => route('projects', ['project' => $project->id]), 'label' => $project->name],
             ];
             $data['project']  = $project;
             $data['subtitle'] = '(' . $task->short_commit . ' - ' . $task->branch . ')';
