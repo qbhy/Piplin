@@ -18,7 +18,7 @@
                     <tbody class="running_menu">
                     @forelse ($running as $task)
                     <tr class="item" id="task_info_{{ $task->id }}">
-                        <td><a href="{{ route('tasks.show', ['id' => $task->id]) }}">{{ $task->id }}</a></td>
+                        <td><a href="{{ route('tasks.show', ['task' => $task->id]) }}">{{ $task->id }}</a></td>
                         <td>{{ $task->project->name }}</td>
                         <td>{{ $task->branch }}</td>
                         <td>{{ $task->started_at->format('g:i:s A') }}</td>
