@@ -46,7 +46,8 @@
         "socialiteproviders/gitlab": "^3.0",
         "version/version": "^2.2",
         "backup-manager/laravel": "*",
-        "sentry/sentry-laravel": "*"
+        "sentry/sentry-laravel": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.5",

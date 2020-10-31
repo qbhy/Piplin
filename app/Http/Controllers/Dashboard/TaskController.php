@@ -13,6 +13,7 @@ namespace Piplin\Http\Controllers\Dashboard;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use McCool\LaravelAutoPresenter\Facades\AutoPresenter;
 use Piplin\Bus\Jobs\AbortTaskJob;
 use Piplin\Bus\Jobs\CreateTaskJob;
@@ -25,6 +26,7 @@ use Piplin\Models\Task;
 use Piplin\Models\Environment;
 use Piplin\Models\Project;
 use Piplin\Models\Release;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The controller for showing the status of tasks.
@@ -36,7 +38,7 @@ class TaskController extends Controller
      *
      * @param Task $task
      *
-     * @return Response
+     * @return Response|View
      */
     public function show(Task $task)
     {
@@ -101,7 +103,7 @@ class TaskController extends Controller
      *
      * @param StoreTaskRequest $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function store(StoreTaskRequest $request)
     {
@@ -163,7 +165,7 @@ class TaskController extends Controller
      * @param Request    $request
      * @param Task $previous
      *
-     * @return Response
+     * @return Response|array
      */
     public function rollback(Request $request, Task $previous)
     {
@@ -208,7 +210,7 @@ class TaskController extends Controller
      *
      * @param Task $task
      *
-     * @return Response
+     * @return Response|array
      */
     public function deployDraft(Task $task)
     {
@@ -242,7 +244,7 @@ class TaskController extends Controller
         }
 
         return redirect()->route('tasks.show', [
-            'id' => $task->id,
+            'task' => $task->id,
         ]);
     }
 }
