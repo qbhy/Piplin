@@ -11,10 +11,12 @@
 
 namespace Piplin\Http\Controllers\Dashboard;
 
+use Illuminate\Support\Collection;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreEnvironmentCabinetRequest;
 use Piplin\Models\Cabinet;
 use Piplin\Models\Environment;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Environment cabinets management controller.
@@ -27,7 +29,7 @@ class CabinetController extends Controller
      * @param Environment                    $environment
      * @param StoreEnvironmentCabinetRequest $request
      *
-     * @return Response
+     * @return Response|Collection
      */
     public function store(Environment $environment, StoreEnvironmentCabinetRequest $request)
     {
@@ -46,7 +48,7 @@ class CabinetController extends Controller
      * @param Environment $environment
      * @param Cabinet     $cabinet
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Environment $environment, Cabinet $cabinet)
     {

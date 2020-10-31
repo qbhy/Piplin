@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreKeyRequest;
 use Piplin\Models\Key;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * SSH key management controller.
@@ -24,31 +25,31 @@ class KeyController extends Controller
     /**
      * Shows the create project view.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\View\View
      */
     public function create(Request $request)
     {
-        return $this->index($request)->withAction('create');
+        return $this->index($request)->with('action', 'create');
     }
 
     /**
      * Key listing.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\View\View
      */
     public function index(Request $request)
     {
         $keys = Key::orderBy('name')
-                    ->paginate(config('piplin.items_per_page', 10));
+            ->paginate(config('piplin.items_per_page', 10));
 
         return view('admin.keys.index', [
-            'title'    => trans('keys.manage'),
+            'title' => trans('keys.manage'),
             'keys_raw' => $keys,
-            'keys'     => $keys->toJson(), // Because PresentableInterface toJson() is not working in the view
+            'keys' => $keys->toJson(), // Because PresentableInterface toJson() is not working in the view
             'current_child' => 'keys',
         ]);
     }
@@ -56,9 +57,9 @@ class KeyController extends Controller
     /**
      * Store a newly created ssh key in storage.
      *
-     * @param StoreKeyRequest $request
+     * @param  StoreKeyRequest  $request
      *
-     * @return Response
+     * @return Response|Key
      */
     public function store(StoreKeyRequest $request)
     {
@@ -71,10 +72,10 @@ class KeyController extends Controller
     /**
      * Store a newly created ssh key in storage.
      *
-     * @param int             $key_id
-     * @param StoreKeyRequest $request
+     * @param  int              $key_id
+     * @param  StoreKeyRequest  $request
      *
-     * @return Response
+     * @return Response|Key
      */
     public function update($key_id, StoreKeyRequest $request)
     {
@@ -91,9 +92,9 @@ class KeyController extends Controller
     /**
      * Re-generates the order for the supplied ssh keys.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function reorder(Request $request)
     {
@@ -116,9 +117,9 @@ class KeyController extends Controller
     /**
      * Remove the specified ssh key from storage.
      *
-     * @param int $key_id
+     * @param  int  $key_id
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy($key_id)
     {

@@ -25,9 +25,9 @@ class HookController extends Controller
     /**
      * Store a newly created notification in storage.
      *
-     * @param StoreHookRequest $request
+     * @param  StoreHookRequest  $request
      *
-     * @return Response
+     * @return Response|Hook
      */
     public function store(StoreHookRequest $request)
     {
@@ -50,9 +50,9 @@ class HookController extends Controller
     /**
      * Update the specified notification in storage.
      *
-     * @param Project          $project
-     * @param Hook             $hook
-     * @param StoreHookRequest $request
+     * @param  Project           $project
+     * @param  Hook              $hook
+     * @param  StoreHookRequest  $request
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
@@ -75,10 +75,10 @@ class HookController extends Controller
     /**
      * Remove the specified hook from storage.
      *
-     * @param Project $project
-     * @param Hook    $hook
+     * @param  Project  $project
+     * @param  Hook     $hook
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Project $project, Hook $hook)
     {

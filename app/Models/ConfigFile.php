@@ -94,11 +94,6 @@ class ConfigFile extends Model
         'id'         => 'integer',
     ];
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Server
-     */
     public function environments()
     {
         return $this->belongsToMany(Environment::class)

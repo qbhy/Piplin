@@ -15,6 +15,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Models\Artifact;
 use Piplin\Models\Project;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller for managing artifacts.
@@ -28,7 +29,7 @@ class ArtifactController extends Controller
      * @param Artifact        $artifact
      * @param ResponseFactory $response
      *
-     * @return ResponseFactory
+     * @return Response
      */
     public function download(Project $project, Artifact $artifact, ResponseFactory $response)
     {

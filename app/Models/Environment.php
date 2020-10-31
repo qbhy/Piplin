@@ -105,64 +105,34 @@ class Environment extends Model
      */
     protected $appends = ['cabinet_count', 'cabinet_names', 'server_count', 'server_names', 'link_count', 'link_names'];
 
-    /**
-     * Has many relationship.
-     *
-     * @return Server
-     */
     public function servers()
     {
         return $this->morphMany(Server::class, 'targetable');
     }
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Cabinet
-     */
     public function cabinets()
     {
         return $this->belongsToMany(Cabinet::class)->withPivot(['id', 'status']);
     }
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Server
-     */
     public function tasks()
     {
         return $this->belongsToMany(Task::class)
                     ->orderBy('id', 'DESC');
     }
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Command
-     */
     public function commands()
     {
         return $this->belongsToMany(Command::class)
                     ->orderBy('order', 'ASC');
     }
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return ConfigFile
-     */
     public function configFiles()
     {
         return $this->belongsToMany(ConfigFile::class)
                     ->orderBy('id', 'DESC');
     }
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Environment
-     */
     public function oppositeEnvironments()
     {
         return $this->belongsToMany(
@@ -173,11 +143,6 @@ class Environment extends Model
         );
     }
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Environment
-     */
     public function oppositePivot()
     {
         return $this->oppositeEnvironments()->withPivot('link_type');

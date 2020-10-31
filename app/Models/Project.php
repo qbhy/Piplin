@@ -430,55 +430,28 @@ class Project extends Model implements HasPresenter
         return $this->hasOne(DeployPlan::class);
     }
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Server
-     */
     public function members()
     {
         return $this->belongsToMany(User::class)->withPivot(['id', 'status']);
     }
 
-    /**
-     * Belongs to relationship.
-     *
-     * @return Key
-     */
     public function key()
     {
         return $this->belongsTo(Key::class, 'key_id', 'id');
     }
 
-    /**
-     * Has many relationship.
-     *
-     * @return Task
-     */
     public function tasks()
     {
         return $this->hasMany(Task::class)
                     ->orderBy('started_at', 'DESC');
     }
 
-    /**
-     * Has many relationship.
-     *
-     * @return Hook
-     */
     public function hooks()
     {
         return $this->hasMany(Hook::class)
                     ->orderBy('name');
     }
 
-    /**
-     * Has many relationship for git references.
-     *
-     * @see PPiplin\Models\Project::tags()
-     * @see PPiplin\Models\Project::branches()
-     * @return Ref
-     */
     public function refs()
     {
         return $this->hasMany(Ref::class);
@@ -508,11 +481,6 @@ class Project extends Model implements HasPresenter
         return collect($tags);
     }
 
-    /**
-     * Gets the list of all branches for the project which are not the default.
-     *
-     * @return Collection
-     */
     public function branches()
     {
         return $this->refs()
@@ -522,11 +490,6 @@ class Project extends Model implements HasPresenter
                     ->pluck('name');
     }
 
-    /**
-     * Has many relationship.
-     *
-     * @return Release
-     */
     public function releases()
     {
         return $this->hasMany(Release::class)

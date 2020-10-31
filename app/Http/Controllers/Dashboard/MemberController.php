@@ -11,12 +11,12 @@
 
 namespace Piplin\Http\Controllers\Dashboard;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreProjectUserRequest;
 use Piplin\Models\Project;
 use Piplin\Models\User;
-use Piplin\Models\Variable;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Project members management controller.
@@ -26,10 +26,10 @@ class MemberController extends Controller
     /**
      * Store a newly created notification in storage.
      *
-     * @param Project                 $project
-     * @param StoreProjectUserRequest $request
+     * @param  Project                  $project
+     * @param  StoreProjectUserRequest  $request
      *
-     * @return Response
+     * @return Response|Collection
      */
     public function store($project, StoreProjectUserRequest $request)
     {
@@ -45,10 +45,10 @@ class MemberController extends Controller
     /**
      * Remove the specified user from project.
      *
-     * @param Project $project
-     * @param User    $user
+     * @param  Project  $project
+     * @param  User     $user
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Project $project, User $user)
     {

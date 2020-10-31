@@ -11,6 +11,7 @@
 
 namespace Piplin\Http\Controllers\Dashboard;
 
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Piplin\Http\Controllers\Controller;
@@ -56,8 +57,8 @@ class BuildController extends Controller
             'servers'         => $buildPlan->servers,
             'patterns'        => $buildPlan->patterns,
             'breadcrumb'      => [
-                ['url' => route('projects', ['id' => $project->id]), 'label' => $project->name],
-                ['url' => route('builds', ['id' => $buildPlan->id]), 'label' => trans('plans.label')],
+                ['url' => route('projects', ['project' => $project->id]), 'label' => $project->name],
+                ['url' => route('builds', ['build' => $buildPlan->id]), 'label' => trans('plans.label')],
             ],
         ];
 
@@ -86,7 +87,7 @@ class BuildController extends Controller
      *
      * @param  BuildPlan $buildPlan
      * @param  int       $paginate
-     * @return array
+     * @return array|Paginator
      */
     private function getLatest(BuildPlan $buildPlan, $paginate = 15)
     {

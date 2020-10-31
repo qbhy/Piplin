@@ -17,7 +17,6 @@ use Piplin\Http\Controllers\Controller;
 use Piplin\Models\Command;
 use Piplin\Models\DeployPlan;
 use Piplin\Models\Task;
-use Piplin\Models\Project;
 
 /**
  * The controller of deploy plans.

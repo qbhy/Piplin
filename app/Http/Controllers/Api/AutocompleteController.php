@@ -11,11 +11,12 @@
 
 namespace Piplin\Http\Controllers\Api;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Models\Cabinet;
 use Piplin\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The Auto-complete controller.
@@ -38,7 +39,7 @@ class AutocompleteController extends Controller
             ->get(['id', 'name', 'nickname'])
             ->toArray();
 
-        return Response::json($users);
+        return new JsonResponse($users);
     }
 
     /**
@@ -58,6 +59,6 @@ class AutocompleteController extends Controller
             $cabinets = Cabinet::where('name', 'like', '%' . $q . '%')->get(['id', 'name']);
         }
 
-        return Response::json($cabinets->toArray());
+        return new JsonResponse($cabinets->toArray());
     }
 }

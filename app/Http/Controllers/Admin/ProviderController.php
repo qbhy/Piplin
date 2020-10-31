@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreProviderRequest;
 use Piplin\Models\Provider;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provider management controller.
@@ -24,31 +25,31 @@ class ProviderController extends Controller
     /**
      * Shows the create provider view.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\View\View
      */
     public function create(Request $request)
     {
-        return $this->index($request)->withAction('create');
+        return $this->index($request)->with('action', 'create');
     }
 
     /**
      * provider listing.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\View\View
      */
     public function index(Request $request)
     {
         $providers = Provider::orderBy('order')
-                    ->paginate(config('piplin.items_per_page', 10));
+            ->paginate(config('piplin.items_per_page', 10));
 
         return view('admin.providers.index', [
-            'title'         => trans('providers.manage'),
+            'title' => trans('providers.manage'),
             'providers_raw' => $providers,
-            'providers'     => $providers->toJson(), // Because PresentableInterface toJson() is not working in the view
+            'providers' => $providers->toJson(), // Because PresentableInterface toJson() is not working in the view
             'current_child' => 'providers',
         ]);
     }
@@ -56,9 +57,9 @@ class ProviderController extends Controller
     /**
      * Store a newly created provider in storage.
      *
-     * @param StoreProviderRequest $request
+     * @param  StoreProviderRequest  $request
      *
-     * @return Response
+     * @return Response|Provider
      */
     public function store(StoreProviderRequest $request)
     {
@@ -73,10 +74,10 @@ class ProviderController extends Controller
     /**
      * Store a newly created provider in storage.
      *
-     * @param Provider             $provider
-     * @param StoreProviderRequest $request
+     * @param  Provider              $provider
+     * @param  StoreProviderRequest  $request
      *
-     * @return Response
+     * @return Response|Provider
      */
     public function update(Provider $provider, StoreProviderRequest $request)
     {
@@ -93,9 +94,9 @@ class ProviderController extends Controller
     /**
      * Re-generates the order for the supplied providers.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function reorder(Request $request)
     {
@@ -118,9 +119,9 @@ class ProviderController extends Controller
     /**
      * Remove the specified provider from storage.
      *
-     * @param Provider $provider
+     * @param  Provider  $provider
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Provider $provider)
     {

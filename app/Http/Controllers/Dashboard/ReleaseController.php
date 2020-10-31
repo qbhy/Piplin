@@ -14,6 +14,7 @@ namespace Piplin\Http\Controllers\Dashboard;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreReleaseRequest;
 use Piplin\Models\Release;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The controller of releases.
@@ -25,7 +26,7 @@ class ReleaseController extends Controller
      *
      * @param StoreReleaseRequest $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function store(StoreReleaseRequest $request)
     {
@@ -47,7 +48,7 @@ class ReleaseController extends Controller
      *
      * @param Release $release
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Release $release)
     {

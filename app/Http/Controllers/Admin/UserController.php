@@ -11,10 +11,12 @@
 
 namespace Piplin\Http\Controllers\Admin;
 
+use Illuminate\View\View;
 use Piplin\Bus\Events\UserWasCreatedEvent;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreUserRequest;
 use Piplin\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * User management controller.
@@ -24,21 +26,21 @@ class UserController extends Controller
     /**
      * Display a listing of the users.
      *
-     * @return Response
+     * @return Response|View
      */
     public function index()
     {
         $users = User::orderBy('id', 'desc')
-                    ->paginate(config('piplin.items_per_page', 10));
+            ->paginate(config('piplin.items_per_page', 10));
 
         return view('admin.users.index', [
-            'title'     => trans('users.manage'),
+            'title' => trans('users.manage'),
             'users_raw' => $users,
-            'users'     => $users->toJson(),
-            'levels'    => [
+            'users' => $users->toJson(),
+            'levels' => [
                 User::LEVEL_COLLABORATOR => trans('users.level.collaborator'),
-                User::LEVEL_MANAGER      => trans('users.level.manager'),
-                User::LEVEL_ADMIN        => trans('users.level.admin'),
+                User::LEVEL_MANAGER => trans('users.level.manager'),
+                User::LEVEL_ADMIN => trans('users.level.admin'),
             ],
             'current_child' => 'users',
         ]);
@@ -47,9 +49,9 @@ class UserController extends Controller
     /**
      * Store a newly created user in storage.
      *
-     * @param StoreUserRequest $request
+     * @param  StoreUserRequest  $request
      *
-     * @return Response
+     * @return Response|User
      */
     public function store(StoreUserRequest $request)
     {
@@ -72,10 +74,10 @@ class UserController extends Controller
     /**
      * Update the specified user in storage.
      *
-     * @param User             $user
-     * @param StoreUserRequest $request
+     * @param  User              $user
+     * @param  StoreUserRequest  $request
      *
-     * @return Response
+     * @return Response|User
      */
     public function update(User $user, StoreUserRequest $request)
     {
@@ -103,9 +105,9 @@ class UserController extends Controller
     /**
      * Remove the specified user from storage.
      *
-     * @param User $user
+     * @param  User  $user
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(User $user)
     {

@@ -13,6 +13,7 @@ namespace Piplin\Http\Controllers\Dashboard;
 
 use Piplin\Http\Controllers\Controller;
 use Piplin\Models\Project;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The deployment webhook management controller.
@@ -25,7 +26,7 @@ class WebhookController extends Controller
      * @param Project $project
      * @param string  $type
      *
-     * @return Response
+     * @return Response|array
      */
     public function refresh(Project $project, $type = '')
     {

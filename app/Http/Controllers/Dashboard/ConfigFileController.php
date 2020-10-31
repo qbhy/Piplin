@@ -16,6 +16,7 @@ use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreConfigFileRequest;
 use Piplin\Models\ConfigFile;
 use Piplin\Bus\Jobs\SyncConfigFileJob;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manage the config global file like some environment files.
@@ -25,7 +26,7 @@ class ConfigFileController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreConfigFileRequest $request
+     * @param  StoreConfigFileRequest  $request
      *
      * @return Response
      */
@@ -41,7 +42,7 @@ class ConfigFileController extends Controller
         );
 
         $targetable_type = array_pull($fields, 'targetable_type');
-        $targetable_id   = array_pull($fields, 'targetable_id');
+        $targetable_id = array_pull($fields, 'targetable_id');
 
         $target = $targetable_type::findOrFail($targetable_id);
 
@@ -66,10 +67,10 @@ class ConfigFileController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param ConfigFile             $config_file
-     * @param StoreConfigFileRequest $request
+     * @param  ConfigFile              $config_file
+     * @param  StoreConfigFileRequest  $request
      *
-     * @return Response
+     * @return Response|ConfigFile
      */
     public function update(ConfigFile $config_file, StoreConfigFileRequest $request)
     {
@@ -100,10 +101,10 @@ class ConfigFileController extends Controller
     /**
      * Sync config file to specified environments.
      *
-     * @param ConfigFile $configFile
-     * @param Request    $request
+     * @param  ConfigFile  $configFile
+     * @param  Request     $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function sync(ConfigFile $configFile, Request $request)
     {
@@ -125,9 +126,9 @@ class ConfigFileController extends Controller
     /**
      * Remove the specified file from storage.
      *
-     * @param ConfigFile $config_file
+     * @param  ConfigFile  $config_file
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(ConfigFile $config_file)
     {

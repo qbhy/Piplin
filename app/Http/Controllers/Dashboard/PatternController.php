@@ -15,6 +15,7 @@ use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StorePatternRequest;
 use Piplin\Models\Pattern;
 use Piplin\Models\BuildPlan;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller for patterns.
@@ -24,8 +25,8 @@ class PatternController extends Controller
     /**
      * Store a newly created file in storage.
      *
-     * @param  StorePatternRequest $request
-     * @return Response
+     * @param  StorePatternRequest  $request
+     * @return Response|Pattern
      */
     public function store(StorePatternRequest $request)
     {
@@ -47,10 +48,10 @@ class PatternController extends Controller
     /**
      * Update the specified file in storage.
      *
-     * @param Pattern             $pattern
-     * @param StorePatternRequest $request
+     * @param  Pattern              $pattern
+     * @param  StorePatternRequest  $request
      *
-     * @return Response
+     * @return Response|Pattern
      */
     public function update(Pattern $pattern, StorePatternRequest $request)
     {
@@ -65,9 +66,9 @@ class PatternController extends Controller
     /**
      * Remove the specified file from storage.
      *
-     * @param Pattern $pattern
+     * @param  Pattern  $pattern
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Pattern $pattern)
     {

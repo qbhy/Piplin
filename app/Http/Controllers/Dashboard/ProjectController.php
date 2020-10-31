@@ -11,8 +11,7 @@
 
 namespace Piplin\Http\Controllers\Dashboard;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Piplin\Bus\Jobs\SetupSkeletonJob;
@@ -73,7 +72,7 @@ class ProjectController extends Controller
      *
      * @param StoreProjectRequest $request
      *
-     * @return Response
+     * @return Response|Project
      */
     public function store(StoreProjectRequest $request)
     {
@@ -103,7 +102,7 @@ class ProjectController extends Controller
      * @param Project             $project
      * @param StoreProjectRequest $request
      *
-     * @return Response
+     * @return Response|Project
      */
     public function update(Project $project, StoreProjectRequest $request)
     {
@@ -124,7 +123,7 @@ class ProjectController extends Controller
      *
      * @param Project $project
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Project $project)
     {
@@ -141,7 +140,7 @@ class ProjectController extends Controller
      *
      * @param Project $project
      *
-     * @return Response
+     * @return Response|Project
      */
     public function recover(Project $project)
     {
@@ -156,7 +155,7 @@ class ProjectController extends Controller
      *
      * @param  Project $project
      * @param  int     $paginate
-     * @return array
+     * @return Paginator
      */
     private function getLatest(Project $project, $paginate = 15)
     {

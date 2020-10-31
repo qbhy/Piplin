@@ -26,7 +26,7 @@ class ProjectController extends Controller
      *
      * @param Request $request
      *
-     * @return Response
+     * @return Response|Project
      */
     public function show(Request $request)
     {

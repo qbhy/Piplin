@@ -13,12 +13,14 @@ namespace Piplin\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use Piplin\Bus\Jobs\SetupSkeletonJob;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreProjectRequest;
 use Piplin\Models\Key;
 use Piplin\Models\Project;
 use Piplin\Models\ProjectGroup;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The controller for managging projects.
@@ -28,28 +30,28 @@ class ProjectController extends Controller
     /**
      * Shows all projects.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
-     * @return Response
+     * @return Response|View
      */
     public function index(Request $request)
     {
         $projects = Project::orderBy('id', 'desc')
-                    ->paginate(config('piplin.items_per_page', 10));
+            ->paginate(config('piplin.items_per_page', 10));
 
         $keys = Key::orderBy('name')
-                    ->get();
+            ->get();
 
         $groups = ProjectGroup::orderBy('order')
-                    ->get();
+            ->get();
 
         return view('admin.projects.index', [
-            'is_secure'    => $request->secure(),
-            'title'        => trans('projects.manage'),
-            'keys'         => $keys,
-            'groups'       => $groups,
+            'is_secure' => $request->secure(),
+            'title' => trans('projects.manage'),
+            'keys' => $keys,
+            'groups' => $groups,
             'projects_raw' => $projects,
-            'projects'     => $projects->toJson(), // Because ProjectPresenter toJson() is not working in the view
+            'projects' => $projects->toJson(), // Because ProjectPresenter toJson() is not working in the view
             'current_child' => 'projects',
         ]);
     }
@@ -57,21 +59,21 @@ class ProjectController extends Controller
     /**
      * Shows the create project view.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\View\View
      */
     public function create(Request $request)
     {
-        return $this->index($request)->withAction('create');
+        return $this->index($request)->with('action', 'create');
     }
 
     /**
      * Store a newly created project in storage.
      *
-     * @param StoreProjectRequest $request
+     * @param  StoreProjectRequest  $request
      *
-     * @return Response
+     * @return Response|Project
      */
     public function store(StoreProjectRequest $request)
     {
@@ -106,8 +108,8 @@ class ProjectController extends Controller
     /**
      * Clone a new project based on skeleton.
      *
-     * @param Project $skeleton
-     * @param Request $request
+     * @param  Project  $skeleton
+     * @param  Request  $request
      *
      * @return Response
      */
@@ -116,15 +118,15 @@ class ProjectController extends Controller
         $fields = $request->only('name');
 
         if (empty($fields['name'])) {
-            $fields['name'] = $skeleton->name . '_Clone';
+            $fields['name'] = $skeleton->name.'_Clone';
         }
 
         $fields['targetable_type'] = $skeleton->targetable_type;
-        $fields['targetable_id']   = $skeleton->targetable_id;
-        $fields['key_id']          = $skeleton->key_id;
-        $fields['deploy_path']     = $skeleton->deploy_path;
-        $fields['repository']      = $skeleton->repository;
-        $target                    = Project::create($fields);
+        $fields['targetable_id'] = $skeleton->targetable_id;
+        $fields['key_id'] = $skeleton->key_id;
+        $fields['deploy_path'] = $skeleton->deploy_path;
+        $fields['repository'] = $skeleton->repository;
+        $target = Project::create($fields);
         $target->members()->attach([Auth::user()->id]);
 
         dispatch(new SetupSkeletonJob($target, $skeleton));
@@ -137,10 +139,10 @@ class ProjectController extends Controller
     /**
      * Update the specified project in storage.
      *
-     * @param Project             $project
-     * @param StoreProjectRequest $request
+     * @param  Project              $project
+     * @param  StoreProjectRequest  $request
      *
-     * @return Response
+     * @return Response|Project
      */
     public function update(Project $project, StoreProjectRequest $request)
     {
@@ -169,9 +171,9 @@ class ProjectController extends Controller
     /**
      * Remove the specified model from storage.
      *
-     * @param Project $project
+     * @param  Project  $project
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Project $project)
     {

@@ -14,6 +14,7 @@ namespace Piplin\Http\Controllers\Dashboard;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreVariableRequest;
 use Piplin\Models\Variable;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Variable management controller.
@@ -49,7 +50,7 @@ class VariableController extends Controller
      * @param Variable             $variable
      * @param StoreVariableRequest $request
      *
-     * @return Response
+     * @return Response|Variable
      */
     public function update(Variable $variable, StoreVariableRequest $request)
     {
@@ -65,7 +66,7 @@ class VariableController extends Controller
      * Remove the specified variable from storage.
      *
      * @param  Variable $variable
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Variable $variable)
     {

@@ -12,11 +12,11 @@
 namespace Piplin\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreProjectGroupRequest;
-use Piplin\Models\Key;
-use Piplin\Models\Project;
 use Piplin\Models\ProjectGroup;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Project group management controller.
@@ -26,16 +26,16 @@ class ProjectGroupController extends Controller
     /**
      * Display a listing of the groups.
      *
-     * @return Response
+     * @return Response|View
      */
-    public function index()
+    public function index(Request $request)
     {
         $groups = ProjectGroup::orderBy('order')
-                    ->paginate(config('piplin.items_per_page', 10));
+            ->paginate(config('piplin.items_per_page', 10));
 
         return view('admin.groups.index', [
-            'title'         => trans('groups.manage'),
-            'groups'        => $groups,
+            'title' => trans('groups.manage'),
+            'groups' => $groups,
             'current_child' => 'groups'
         ]);
     }
@@ -43,21 +43,21 @@ class ProjectGroupController extends Controller
     /**
      * Shows the create project group view.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\View\View
      */
     public function create(Request $request)
     {
-        return $this->index($request)->withAction('create');
+        return $this->index($request)->with('action', 'create');
     }
 
     /**
      * Store a newly created group in storage.
      *
-     * @param StoreProjectGroupRequest $request
+     * @param  StoreProjectGroupRequest  $request
      *
-     * @return Response
+     * @return Response|ProjectGroup
      */
     public function store(StoreProjectGroupRequest $request)
     {
@@ -69,10 +69,10 @@ class ProjectGroupController extends Controller
     /**
      * Update the specified group in storage.
      *
-     * @param ProjectGroup             $group
-     * @param StoreProjectGroupRequest $request
+     * @param  ProjectGroup              $group
+     * @param  StoreProjectGroupRequest  $request
      *
-     * @return Response
+     * @return Response|ProjectGroup
      */
     public function update(ProjectGroup $group, StoreProjectGroupRequest $request)
     {
@@ -86,9 +86,9 @@ class ProjectGroupController extends Controller
     /**
      * Re-generates the order for the supplied groups.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function reorder(Request $request)
     {
@@ -111,9 +111,9 @@ class ProjectGroupController extends Controller
     /**
      * Remove the specified group from storage.
      *
-     * @param ProjectGroup $group
+     * @param  ProjectGroup  $group
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(ProjectGroup $group)
     {

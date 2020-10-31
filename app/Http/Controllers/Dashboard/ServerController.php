@@ -18,8 +18,8 @@ use Piplin\Http\Requests\StoreServerRequest;
 use Piplin\Models\Cabinet;
 use Piplin\Models\Environment;
 use Piplin\Models\BuildPlan;
-use Piplin\Models\Project;
 use Piplin\Models\Server;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Server management controller.
@@ -29,9 +29,9 @@ class ServerController extends Controller
     /**
      * Store a newly created server in storage.
      *
-     * @param StoreServerRequest $request
+     * @param  StoreServerRequest  $request
      *
-     * @return Response
+     * @return Response|Server
      */
     public function store(StoreServerRequest $request)
     {
@@ -45,7 +45,7 @@ class ServerController extends Controller
             'targetable_id'
         );
 
-        $targetable_id   = array_pull($fields, 'targetable_id');
+        $targetable_id = array_pull($fields, 'targetable_id');
         $targetable_type = array_pull($fields, 'targetable_type');
 
         if ($targetable_type === Environment::class) {
@@ -58,16 +58,16 @@ class ServerController extends Controller
 
         // Get the current highest server order
         $max = Server::where('targetable_id', $targetable_id)
-                           ->where('targetable_type', $targetable_type)
-                           ->orderBy('order', 'DESC')
-                           ->first();
+            ->where('targetable_type', $targetable_type)
+            ->orderBy('order', 'DESC')
+            ->first();
 
         $order = 0;
         if (isset($max)) {
             $order = $max->order + 1;
         }
 
-        $fields['order']  = $order;
+        $fields['order'] = $order;
         $fields['output'] = null;
 
         $server = $targetable->servers()->create($fields);
@@ -78,10 +78,10 @@ class ServerController extends Controller
     /**
      * Update the specified server in storage.
      *
-     * @param Server             $server
-     * @param StoreServerRequest $request
+     * @param  Server              $server
+     * @param  StoreServerRequest  $request
      *
-     * @return Response
+     * @return Response|Server
      */
     public function update(Server $server, StoreServerRequest $request)
     {
@@ -100,9 +100,9 @@ class ServerController extends Controller
     /**
      * Queues a connection test for the specified server.
      *
-     * @param Server $server
+     * @param  Server  $server
      *
-     * @return Response
+     * @return Response|array
      */
     public function test(Server $server)
     {
@@ -121,9 +121,9 @@ class ServerController extends Controller
     /**
      * Re-generates the order for the supplied servers.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function reorder(Request $request)
     {
@@ -146,9 +146,9 @@ class ServerController extends Controller
     /**
      * Remove the specified server from storage.
      *
-     * @param Server $server
+     * @param  Server  $server
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Server $server)
     {

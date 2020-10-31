@@ -11,7 +11,6 @@
 
 namespace Piplin\Http\Controllers\Dashboard;
 
-use Illuminate\Http\Request;
 use McCool\LaravelAutoPresenter\Facades\AutoPresenter;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Models\ServerLog;

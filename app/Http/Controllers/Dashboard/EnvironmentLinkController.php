@@ -14,6 +14,7 @@ namespace Piplin\Http\Controllers\Dashboard;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreEnvironmentLinkRequest;
 use Piplin\Models\Environment;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller for managing notifications.

@@ -12,14 +12,14 @@
 namespace Piplin\Http\Controllers\Dashboard;
 
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreEnvironmentRequest;
 use Piplin\Models\Command;
 use Piplin\Models\Environment;
 use Piplin\Models\EnvironmentLink;
-use Piplin\Models\Link;
-use Piplin\Models\Project;
 use Piplin\Models\DeployPlan;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Environment management controller.
@@ -29,11 +29,11 @@ class EnvironmentController extends Controller
     /**
      * Display a listing of before/after commands for the supplied stage.
      *
-     * @param DeployPlan  $deployPlan
-     * @param Environment $environment
-     * @param string      $tab
+     * @param  DeployPlan   $deployPlan
+     * @param  Environment  $environment
+     * @param  string       $tab
      *
-     * @return Response
+     * @return Response|View
      */
     public function show(DeployPlan $deployPlan, Environment $environment, $tab = '')
     {
@@ -44,40 +44,43 @@ class EnvironmentController extends Controller
         });
 
         $breadcrumb = [
-            ['url' => route('projects', ['id' => $project->id, 'tab' => 'environments']), 'label' => $project->name],
+            [
+                'url' => route('projects', ['project' => $project->id, 'tab' => 'environments']),
+                'label' => $project->name
+            ],
         ];
         $data = [
-            'title'           => $environment->name,
-            'breadcrumb'      => $breadcrumb,
-            'project'         => $project,
-            'deployPlan'      => $deployPlan,
+            'title' => $environment->name,
+            'breadcrumb' => $breadcrumb,
+            'project' => $project,
+            'deployPlan' => $deployPlan,
             'targetable_type' => get_class($environment),
-            'targetable_id'   => $environment->id,
-            'environments'    => $deployPlan->environments,
-            'targetable'      => $environment,
-            'branches'        => $project->branches(),
-            'tags'            => $project->tags()->reverse(),
-            'optional'        => $optional,
-            'tab'             => $tab,
+            'targetable_id' => $environment->id,
+            'environments' => $deployPlan->environments,
+            'targetable' => $environment,
+            'branches' => $project->branches(),
+            'tags' => $project->tags()->reverse(),
+            'optional' => $optional,
+            'tab' => $tab,
         ];
 
         $links = [
             [
-                'id'   => EnvironmentLink::MANUAL,
+                'id' => EnvironmentLink::MANUAL,
                 'name' => trans('environments.link_manual'),
             ],
             [
-                'id'   => EnvironmentLink::AUTOMATIC,
+                'id' => EnvironmentLink::AUTOMATIC,
                 'name' => trans('environments.link_auto'),
             ],
         ];
         if ($tab === 'deployments') {
             $data['tasks'] = $environment->tasks()->paginate(15);
         } elseif ($tab === 'links') {
-            $data['links']            = $links;
+            $data['links'] = $links;
             $data['environmentLinks'] = $environment->oppositePivot;
         } else {
-            $data['servers']  = $environment->servers;
+            $data['servers'] = $environment->servers;
             $data['cabinets'] = $environment->cabinets->toJson();
         }
 
@@ -87,7 +90,7 @@ class EnvironmentController extends Controller
     /**
      * Store a newly created environment in storage.
      *
-     * @param StoreEnvironmentRequest $request
+     * @param  StoreEnvironmentRequest  $request
      *
      * @return Response
      */
@@ -103,7 +106,7 @@ class EnvironmentController extends Controller
         );
 
         $targetable_type = array_pull($fields, 'targetable_type');
-        $targetable_id   = array_pull($fields, 'targetable_id');
+        $targetable_id = array_pull($fields, 'targetable_id');
 
         $add_commands = false;
         if (isset($fields['add_commands'])) {
@@ -128,10 +131,10 @@ class EnvironmentController extends Controller
     /**
      * Update the specified environment in storage.
      *
-     * @param Environment             $environment
-     * @param StoreEnvironmentRequest $request
+     * @param  Environment              $environment
+     * @param  StoreEnvironmentRequest  $request
      *
-     * @return Response
+     * @return Response|Environment
      */
     public function update(Environment $environment, StoreEnvironmentRequest $request)
     {
@@ -147,9 +150,9 @@ class EnvironmentController extends Controller
     /**
      * Re-generates the order for the supplied environments.
      *
-     * @param Request $request
+     * @param  Request  $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function reorder(Request $request)
     {
@@ -172,8 +175,8 @@ class EnvironmentController extends Controller
     /**
      * Remove the specified environment from storage.
      *
-     * @param  Environment $environment
-     * @return Response
+     * @param  Environment  $environment
+     * @return Response|array
      */
     public function destroy(Environment $environment)
     {

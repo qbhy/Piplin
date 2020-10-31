@@ -24,6 +24,7 @@ use Piplin\Services\Webhooks\Github;
 use Piplin\Services\Webhooks\Gitlab;
 use Piplin\Services\Webhooks\Gogs;
 use Piplin\Services\Webhooks\Oschina;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The task incoming-webhook controller.
@@ -32,6 +33,7 @@ class IncomingWebhookController extends Controller
 {
     /**
      * List of supported service classes.
+     *
      * @var array
      */
     private $services = [
@@ -56,10 +58,10 @@ class IncomingWebhookController extends Controller
     /**
      * Handles incoming requests to trigger deploy.
      *
-     * @param Request $request
-     * @param string  $hash
+     * @param  Request  $request
+     * @param  string   $hash
      *
-     * @return Response
+     * @return Response|array
      */
     public function deploy(Request $request, $hash)
     {
@@ -89,10 +91,10 @@ class IncomingWebhookController extends Controller
     /**
      * Handles incoming requests to trigger build.
      *
-     * @param Request $request
-     * @param string  $hash
+     * @param  Request  $request
+     * @param  string   $hash
      *
-     * @return Response
+     * @return Response|array
      */
     public function build(Request $request, $hash)
     {
@@ -123,8 +125,8 @@ class IncomingWebhookController extends Controller
      * Goes through the various webhook integrations as checks if the request is for them and parses it.
      * Then adds the various additional details required to trigger a task.
      *
-     * @param Request $request
-     * @param Project $project
+     * @param  Request  $request
+     * @param  Project  $project
      *
      * @return mixed Either an array of parameters for the task config, or false if it is invalid.
      */
@@ -145,9 +147,9 @@ class IncomingWebhookController extends Controller
      * Takes the data returned from the webhook request and then adds projects own data, such as project ID
      * and runs any checks such as checks the branch is allowed to be deployed.
      *
-     * @param mixed   $payload
-     * @param Request $request
-     * @param Project $project
+     * @param  mixed    $payload
+     * @param  Request  $request
+     * @param  Project  $project
      *
      * @return mixed Either an array of the complete task config, or false if it is invalid.
      */
@@ -174,31 +176,31 @@ class IncomingWebhookController extends Controller
 
         // Check if the commands input is set, if so explode on comma and filter out any invalid commands
         if ($request->has('commands')) {
-            $valid     = $project->deployPlan->commands->pluck('id');
+            $valid = $project->deployPlan->commands->pluck('id');
             $requested = explode(',', $request->get('commands'));
 
             $payload['optional'] = collect($requested)->unique()
-                                                      ->intersect($valid)
-                                                      ->toArray();
+                ->intersect($valid)
+                ->toArray();
         }
 
         $payload['environments'] = [];
         if ($request->has('environments')) {
-            $valid     = $project->deployPlan->environments->pluck('id');
+            $valid = $project->deployPlan->environments->pluck('id');
             $requested = explode(',', $request->get('environments'));
 
             $payload['environments'] = collect($requested)->unique()
-                                                      ->intersect($valid)
-                                                      ->toArray();
+                ->intersect($valid)
+                ->toArray();
         }
 
         // Check if the request has an update_only query string and if so check the branch matches
         if ($request->has('update_only') && $request->get('update_only') !== false) {
             $task = Task::where('project_id', $project->id)
-                           ->where('status', Task::COMPLETED)
-                           ->whereNotNull('started_at')
-                           ->orderBy('started_at', 'DESC')
-                           ->first();
+                ->where('status', Task::COMPLETED)
+                ->whereNotNull('started_at')
+                ->orderBy('started_at', 'DESC')
+                ->first();
 
             if (!$task || $task->branch !== $payload['branch']) {
                 return false;
@@ -211,16 +213,16 @@ class IncomingWebhookController extends Controller
     /**
      * Gets all pending and running tasks for a project and aborts them.
      *
-     * @param int $project_id
+     * @param  int  $project_id
      *
      * @return void
      */
     private function abortQueued($project_id)
     {
         $tasks = Task::where('project_id', $project_id)
-                                   ->whereIn('status', [Task::RUNNING, Task::PENDING])
-                                   ->orderBy('started_at', 'DESC')
-                                   ->get();
+            ->whereIn('status', [Task::RUNNING, Task::PENDING])
+            ->orderBy('started_at', 'DESC')
+            ->get();
 
         foreach ($tasks as $task) {
             $task->status = Task::ABORTING;

@@ -14,6 +14,7 @@ namespace Piplin\Http\Controllers\Dashboard;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreSharedFileRequest;
 use Piplin\Models\SharedFile;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller for managing files.
@@ -49,7 +50,7 @@ class SharedFileController extends Controller
      * @param SharedFile             $shared_file
      * @param StoreSharedFileRequest $request
      *
-     * @return Response
+     * @return Response|SharedFile
      */
     public function update(SharedFile $shared_file, StoreSharedFileRequest $request)
     {
@@ -66,7 +67,7 @@ class SharedFileController extends Controller
      *
      * @param SharedFile $shared_file
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(SharedFile $shared_file)
     {

@@ -119,22 +119,12 @@ class Command extends Model implements HasPresenter
         'order'      => 'integer',
     ];
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Server
-     */
     public function environments()
     {
         return $this->belongsToMany(Environment::class)
                     ->orderBy('order', 'ASC');
     }
 
-    /**
-     * Belongs to many relationship.
-     *
-     * @return Server
-     */
     public function patterns()
     {
         return $this->belongsToMany(Pattern::class)

@@ -11,7 +11,9 @@
 
 namespace Piplin\Http\Controllers\Admin;
 
+use Illuminate\View\View;
 use Piplin\Http\Controllers\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller for admin.
@@ -21,7 +23,7 @@ class AdminController extends Controller
     /**
      * Shows admin.
      *
-     * @return Response
+     * @return Response|View
      */
     public function index()
     {

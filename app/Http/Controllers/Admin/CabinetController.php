@@ -12,11 +12,11 @@
 namespace Piplin\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Piplin\Http\Controllers\Controller;
 use Piplin\Http\Requests\StoreCabinetRequest;
 use Piplin\Models\Cabinet;
-use Piplin\Models\Key;
-use Piplin\Models\Project;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Cabinet management controller.
@@ -26,15 +26,15 @@ class CabinetController extends Controller
     /**
      * Display a listing of the cabinets.
      *
-     * @return Response
+     * @return Response|View
      */
     public function index()
     {
         $cabinets = Cabinet::orderBy('order')
-                    ->paginate(config('piplin.items_per_page', 10));
+            ->paginate(config('piplin.items_per_page', 10));
 
         return view('admin.cabinets.index', [
-            'title'    => trans('cabinets.manage'),
+            'title' => trans('cabinets.manage'),
             'cabinets' => $cabinets,
             'current_child' => 'cabinets',
         ]);
@@ -43,7 +43,7 @@ class CabinetController extends Controller
     /**
      * The details of an individual cabinet.
      *
-     * @param Cabinet $cabinet
+     * @param  Cabinet  $cabinet
      *
      * @return View
      */
@@ -52,22 +52,22 @@ class CabinetController extends Controller
         $cabinets = Cabinet::all();
 
         return view('admin.cabinets.show', [
-            'title'           => trans('cabinets.manage'),
-            'servers_raw'     => $cabinet->servers,
+            'title' => trans('cabinets.manage'),
+            'servers_raw' => $cabinet->servers,
             'targetable_type' => 'Piplin\\Models\\Cabinet',
-            'targetable_id'   => $cabinet->id,
-            'targetable'      => $cabinet,
-            'environments'    => $cabinets,
-            'servers'         => $cabinet->servers->toJson(),
+            'targetable_id' => $cabinet->id,
+            'targetable' => $cabinet,
+            'environments' => $cabinets,
+            'servers' => $cabinet->servers->toJson(),
         ]);
     }
 
     /**
      * Store a newly created cabinet in storage.
      *
-     * @param StoreCabinetRequest $request
+     * @param  StoreCabinetRequest  $request
      *
-     * @return Response
+     * @return Response|Cabinet
      */
     public function store(StoreCabinetRequest $request)
     {
@@ -80,10 +80,10 @@ class CabinetController extends Controller
     /**
      * Update the specified cabinet in storage.
      *
-     * @param Cabinet             $cabinet
-     * @param StoreCabinetRequest $request
+     * @param  Cabinet              $cabinet
+     * @param  StoreCabinetRequest  $request
      *
-     * @return Response
+     * @return Response|Cabinet
      */
     public function update(Cabinet $cabinet, StoreCabinetRequest $request)
     {
@@ -98,9 +98,9 @@ class CabinetController extends Controller
     /**
      * Re-generates the order for the supplied cabinets.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
-     * @return Response
+     * @return Response|array
      */
     public function reorder(Request $request)
     {
@@ -123,9 +123,9 @@ class CabinetController extends Controller
     /**
      * Remove the specified cabinet from storage.
      *
-     * @param Cabinet $cabinet
+     * @param  Cabinet  $cabinet
      *
-     * @return Response
+     * @return Response|array
      */
     public function destroy(Cabinet $cabinet)
     {
