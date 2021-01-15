@@ -53,11 +53,11 @@ class RefreshJsonWebToken
     private $jwt;
 
     /**
-     * @param JWTAuth         $jwt
-     * @param Dispatcher      $dispatcher
-     * @param Redirector      $redirector
+     * @param JWTAuth $jwt
+     * @param Dispatcher $dispatcher
+     * @param Redirector $redirector
      * @param ResponseFactory $response
-     * @param AuthFactory     $auth
+     * @param AuthFactory $auth
      */
     public function __construct(
         JWTAuth $jwt,
@@ -65,20 +65,21 @@ class RefreshJsonWebToken
         Redirector $redirector,
         ResponseFactory $response,
         AuthFactory $auth
-    ) {
-        $this->jwt        = $jwt;
+    )
+    {
+        $this->jwt = $jwt;
         $this->dispatcher = $dispatcher;
         $this->redirector = $redirector;
-        $this->response   = $response;
-        $this->auth       = $auth;
+        $this->response = $response;
+        $this->auth = $auth;
     }
 
     /**
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param Closure                  $next
-     * @param string|null              $guard
+     * @param Closure $next
+     * @param string|null $guard
      *
      * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -107,6 +108,7 @@ class RefreshJsonWebToken
                     return $this->response->make('Unauthorized.', Response::HTTP_UNAUTHORIZED);
                 }
 
+                $this->auth->guard()->logout();
                 return $this->redirector->guest('login');
             }
         }
