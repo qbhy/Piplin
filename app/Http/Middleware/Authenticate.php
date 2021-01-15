@@ -34,7 +34,7 @@ class Authenticate extends AbstractMiddleware
      */
     public function __construct(Guard $auth)
     {
-        $this->auth       = $auth;
+        $this->auth = $auth;
     }
 
     /**
