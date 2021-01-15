@@ -24,6 +24,7 @@ use Piplin\Models\Identity;
 use Piplin\Models\Provider;
 use Piplin\Models\User;
 use PragmaRX\Google2FA\Contracts\Google2FA as Google2FA;
+use Tymon\JWTAuth\JWTAuth;
 
 /**
  * Authentication controller.
@@ -80,6 +81,7 @@ class AuthController extends Controller
             Auth::once($credentials);
 
             if (Auth::user()->has_two_factor_authentication) {
+                Session::put('jwt', JWTAuth::fromUser(Auth::user()));
                 Session::put('2fa_user_id', Auth::user()->id);
                 Session::put('2fa_remember', $request->has('remember'));
 

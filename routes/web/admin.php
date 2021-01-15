@@ -10,7 +10,7 @@
  */
 
 Route::group([
-    'middleware' => ['auth', 'jwt', 'admin'],
+    'middleware' => ['auth',  'admin'],
     'namespace'  => 'Admin',
     'prefix'     => 'admin',
 ], function () {
